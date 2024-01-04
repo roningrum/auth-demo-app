@@ -1,26 +1,27 @@
-import { Button, SafeAreaView, TextInput, Text, View } from "react-native"
+import { Button, SafeAreaView, TextInput, Text, View, StyleSheet, TouchableOpacity } from "react-native"
 import COLORS from "../theme/colors"
 import { useState } from "react"
 import axios from "axios"
 
-const Login =()=>{
+const Login =({navigation})=>{
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
     const [token, setToken] = useState("")
     const [isToken, setThereToken] = useState(false)
 
+    // const navigation = useNavigation()
+
     const user = {username: userName, password: password}
 
     const login = async()=>{
         try{
-            const headers = {'Accept': 'application/json',
-            'Content-Type': 'application/json'}
             const response = await axios.post('http://192.168.202.249:8080/rest/auth/login', user)
             const data = response.data
             const {token} = data
 
             if(token){
                 setToken(token)
+                navigation.navigate('Home',{token:token})
             }
             console.log(response.data.token)
             return token
@@ -39,7 +40,7 @@ const Login =()=>{
 
     return(
         <SafeAreaView style={{flex:1, paddingTop:40, backgroundColor: COLORS.white}}>
-            {!token ? <View style ={{flex:1, marginHorizontal:22}}>
+            <View style ={{flex:1, marginHorizontal:22}}>
                 <Text style={{fontSize:22, fontWeight:'bold', marginVertical:12, color:COLORS.black}}>
                     Hey Welcome Back!
                 </Text>
@@ -97,14 +98,23 @@ const Login =()=>{
                     </View>
                    
                 </View>
-                <Button title="Login" filled
-                style={{marginTop:18, marginBottom:4, 
-                backgroundColor: COLORS.primary, // Ganti dengan warna latar belakang yang diinginkan
-                borderRadius: 8,
-                paddingVertical: 14,
-                paddingHorizontal: 16,}} onPress={login}/>
-            </View> : <Text>Token {token}</Text>}
+                <TouchableOpacity style={style.loginButton} onPress={login}>
+                <Text style={{color: COLORS.white}}>Login</Text>
+                </TouchableOpacity>
+            </View>
         </SafeAreaView>
     )
 }
+const style = StyleSheet.create({
+    loginButton:{
+        backgroundColor:COLORS.secondary,
+        borderRadius:8,
+        paddingHorizontal:12,
+        paddingVertical:16,
+        fontSize:14,
+        alignItems:'center'
+    }
+}
+    
+)
 export default Login

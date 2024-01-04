@@ -1,9 +1,10 @@
 import { Text, View } from "react-native"
 
-const Home =()=>{
+const Home =({navigation, route})=>{
     return(
         <View>
-           <Text>Home</Text>
+            <Text>Home</Text>
+           <Text>This is your Token {route.params.token}</Text>
         </View>
     )
 }
